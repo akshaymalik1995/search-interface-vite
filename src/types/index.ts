@@ -10,5 +10,4 @@ export interface Filter {
     id: number,
     title: string,
     count: number,
-    onCheck: (item : string, checked: boolean) => void
 }
