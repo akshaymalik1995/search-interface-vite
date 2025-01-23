@@ -16,7 +16,6 @@ class App {
     $filters.addListener((filters) => this.addFiltersToUI(filters))
     $selectedFilters.addListener(selectedFilters => this.filterResults(selectedFilters))
     this.addEventListeners()
-    this.fetchResults()
   }
 
   addEventListeners() {
@@ -34,16 +33,11 @@ class App {
         $results.set([])
         return
       }
-      const isSearchOn = $isSearchOn.getValue()
-      if (!isSearchOn) {
-        $isSearchOn.set(true)
-      }
       this.fetchResults(searchValue)
     })
   }
 
   onSearchToggle(isSearchOn: boolean) {
-    console.log("onSearchToggle is called", isSearchOn)
     if (isSearchOn) {
       document.getElementById('search-results-container')!.classList.remove('hidden')
     } else {
@@ -60,6 +54,8 @@ class App {
     $filters.set(createFiltersFromResults($results.getValue()))
     if (searchResults.length === 0) {
       $isSearchOn.set(false)
+    } else {
+      $isSearchOn.set(true)
     }
   }
 
