@@ -1,5 +1,5 @@
 import FiltersUI from './components/FiltersUI'
-import ResultsUI from './components/ResultsUI'
+import { renderResultsUI } from './components/ResultsUI'
 import Signal from './signal'
 import { Filter, Result } from './types'
 import { onSearchToggle } from './ui'
@@ -11,6 +11,6 @@ export const $isSearchOn: Signal<boolean> = new Signal<boolean>(false)
 
 
 $filters.addListener((filters) => FiltersUI({ filters }))
-$filteredResults.addListener((results) => ResultsUI({ results }))
+$filteredResults.addListener((results) => renderResultsUI({ results }))
 $isSearchOn.addListener(isSearchOn => onSearchToggle(isSearchOn))
 

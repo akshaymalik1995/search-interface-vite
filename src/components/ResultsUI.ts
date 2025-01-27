@@ -1,16 +1,20 @@
-import { html, render } from 'lit-html';
+import { html, render } from "lit-html";
 import { Result } from "../types";
-import ResultCard from "./ResultCard";
+import { ResultCard } from "./ResultCard";
 
-function ResultsUI(props: { results: Result[] }) {
-    const { results } = props;
-    const template = html`
-        <div class="grid grid-cols-2 gap-6">
-            ${results.map(result => ResultCard({ result }))}
-        </div>
-    `;
-    
-    render(template, document.getElementById('results')!);
+export function ResultsUI(props: { results: Result[] }) {
+  const { results } = props;
+  const template = html`
+    <div class="grid grid-cols-2 gap-6">
+      ${results.map((result) => ResultCard({ result }))}
+    </div>
+  `;
 
+  return template;
 }
-export default ResultsUI;
+
+export function renderResultsUI(props: { results: Result[] }) {
+  const { results } = props;
+  const template = ResultsUI({ results });
+  render(template, document.getElementById("results")!);
+}
