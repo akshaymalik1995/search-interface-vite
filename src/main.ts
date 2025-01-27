@@ -2,7 +2,7 @@ import { Result } from "./types"
 import { createFiltersFromResults } from "./components/utils"
 import { $filteredResults, $filters, $isSearchOn, $results } from "./state"
 
-const BACKEND_URL = 'http://localhost:3000/recipes'
+const BACKEND_URL = 'http://localhost:5000/recipes'
 
 class App {
 
