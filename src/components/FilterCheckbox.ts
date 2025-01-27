@@ -1,16 +1,18 @@
 import { Filter } from "../types"
-import { $selectedFilters } from "../state"
+import { $filteredResults } from "../state"
 
 export default function FilterCheckbox(props: { filter: Filter }): HTMLElement {
     const { id, title, count } = props.filter
     const element = document.createElement('div')
 
     function onFilterClick(value: string, checked: boolean) {
-        $selectedFilters.update(selectedFilters => {
-            if (!checked) {
-                return selectedFilters.filter(filter => filter !== value)
+        $filteredResults.update((results) => {
+            if (checked) {
+                const newResults = results.filter(result => result.ingredients.includes(value))
+                return newResults
+            } else {
+                return results
             }
-            return [...selectedFilters, value]
         })
     }
 

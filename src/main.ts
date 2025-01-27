@@ -1,20 +1,12 @@
-import { Filter, Result } from "./types"
-import Results from "./components/Results"
-import FilterCheckboxList from "./components/FilterCheckboxList"
+import { Result } from "./types"
 import { createFiltersFromResults } from "./components/utils"
-import { $filters, $isSearchOn, $results, $selectedFilters } from "./state"
+import { $filteredResults, $filters, $isSearchOn, $results } from "./state"
 
 const BACKEND_URL = 'http://localhost:3000/recipes'
 
 class App {
 
   constructor() {
-    $isSearchOn.addListener(isSearchOn => {
-      this.onSearchToggle(isSearchOn)
-    })
-    $results.addListener(results => this.addResultsToUI(results))
-    $filters.addListener((filters) => this.addFiltersToUI(filters))
-    $selectedFilters.addListener(selectedFilters => this.filterResults(selectedFilters))
     this.addEventListeners()
   }
 
@@ -25,25 +17,19 @@ class App {
   private _addInputSearchListener() {
     console.log("addInputSearchListener is called")
     const searchInput = document.getElementById('search')!
-    
+
     searchInput.addEventListener('input', (event: Event) => {
       const searchValue = (event.target as HTMLInputElement).value
       if (!searchValue) {
         $isSearchOn.set(false)
-        $results.set([])
+        $filteredResults.set([])
         return
       }
       this.fetchResults(searchValue)
     })
   }
 
-  onSearchToggle(isSearchOn: boolean) {
-    if (isSearchOn) {
-      document.getElementById('search-results-container')!.classList.remove('hidden')
-    } else {
-      document.getElementById('search-results-container')!.classList.add('hidden')
-    }
-  }
+  
 
   async fetchResults(searchValue?: string): Promise<void> {
     const url = BACKEND_URL
@@ -51,7 +37,9 @@ class App {
     const results = await response.json()
     const searchResults = results.filter((result: Result) => result.title.toLowerCase().includes(searchValue?.toLowerCase() || ''))
     $results.set(searchResults)
-    $filters.set(createFiltersFromResults($results.getValue()))
+    $filteredResults.set(searchResults)
+    const filters = createFiltersFromResults(searchResults)
+    $filters.set(filters)
     if (searchResults.length === 0) {
       $isSearchOn.set(false)
     } else {
@@ -62,25 +50,13 @@ class App {
   filterResults(filters: string[]) {
     const results = $results.getValue()
     if (filters.length === 0) {
-      this.addResultsToUI(results)
+      $filteredResults.set(results)
       return
     }
     const filteredResults = results.filter(result => {
       return result.ingredients.some(ingredient => filters.includes(ingredient))
     })
-    this.addResultsToUI(filteredResults)
-  }
-
-  addFiltersToUI(filters: Filter[]) {
-    const filtersContainer = document.getElementById('filters')!
-    filtersContainer.innerHTML = ''
-    filtersContainer.appendChild(FilterCheckboxList({ filters }))
-  }
-
-  addResultsToUI(results: Result[]) {
-    const resultsContainer = document.getElementById('results')!
-    resultsContainer.innerHTML = ''
-    resultsContainer.appendChild(Results({ results }))
+    $filteredResults.set(filteredResults)
   }
 }
 
