@@ -1,10 +1,9 @@
 import { html, render } from "lit-html";
-import { Result } from "../types";
 import { ResultCard } from "./ResultCard";
 import { $filteredResults } from "../state";
 
-export function ResultsUI(props: { results: Result[] }) {
-  const { results } = props;
+export function ResultsUI() {
+  const results = $filteredResults.getValue();
   const template = html`
     <div class="grid grid-cols-2 gap-6">
       ${results.map((result) => ResultCard({ result }))}
@@ -14,8 +13,8 @@ export function ResultsUI(props: { results: Result[] }) {
   return template;
 }
 
-$filteredResults.addListener((results) => {
+$filteredResults.addListener(() => {
   const root = document.getElementById("results");
-  render(ResultsUI({ results }), root!);
+  render(ResultsUI(), root!);
 });
 

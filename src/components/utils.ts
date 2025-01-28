@@ -14,3 +14,11 @@ export function createFiltersFromResults(results: Result[]): Filter[] {
     }, [] as Filter[])
     return filters
 }
+
+export async function fetchResults(searchValue?: string): Promise<Result[]> {
+    const url = 'http://localhost:5000/recipes'
+    const response = await fetch(url)
+    const results = await response.json()
+    const searchResults = results.filter((result: Result) => result.title.toLowerCase().includes(searchValue?.toLowerCase() || ''))
+    return searchResults
+}
