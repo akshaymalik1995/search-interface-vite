@@ -1,6 +1,7 @@
 import { html, render } from "lit-html";
 import { Result } from "../types";
 import { ResultCard } from "./ResultCard";
+import { $filteredResults } from "../state";
 
 export function ResultsUI(props: { results: Result[] }) {
   const { results } = props;
@@ -13,8 +14,8 @@ export function ResultsUI(props: { results: Result[] }) {
   return template;
 }
 
-export function renderResultsUI(props: { results: Result[] }) {
-  const { results } = props;
-  const template = ResultsUI({ results });
-  render(template, document.getElementById("results")!);
-}
+$filteredResults.addListener((results) => {
+  const root = document.getElementById("results");
+  render(ResultsUI({ results }), root!);
+});
+

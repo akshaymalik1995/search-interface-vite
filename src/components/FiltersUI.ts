@@ -1,3 +1,4 @@
+import { $filters } from "../state";
 import { Filter } from "../types";
 import FilterCheckbox from "./FilterCheckbox";
 import { html, render } from "lit-html";
@@ -12,7 +13,10 @@ function FiltersUI(props: { filters: Filter[] }) {
     </div>
   `;
 
-  render(template, document.getElementById("filters")!);
+  return template;
 }
 
-export default FiltersUI;
+$filters.addListener((filters) => {
+  const root = document.getElementById("filters");
+  render(FiltersUI({ filters }), root!);
+});
