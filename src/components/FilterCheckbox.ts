@@ -1,5 +1,5 @@
 import { Filter } from "../types";
-import { $filteredResults, $results, $selectedFilters } from "../state";
+import { $selectedFilters } from "../state";
 import { html } from "lit-html";
 
 export default function FilterCheckbox(props: { filter: Filter }) {
