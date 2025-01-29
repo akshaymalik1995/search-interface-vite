@@ -4,13 +4,14 @@ import { $isSearchOn, $results } from "../state";
 
 async function onChange(event: Event) {
   const search = (event.target as HTMLInputElement).value;
-  if (!search) {
-    $isSearchOn.set(false);
-    $results.set([]);
-    return;
-  }
-  $isSearchOn.set(true);
   const searchResults = await fetchResults(search);
+  if (!searchResults.length) {
+      if ($isSearchOn.getValue()) {
+          $isSearchOn.set(false);
+      }
+  } else {
+      $isSearchOn.set(true);
+  }
   $results.set(searchResults);
 }
 
