@@ -1,9 +1,15 @@
 import { html } from "lit-html";
 import { fetchResults } from "./utils";
-import { $results } from "../state";
+import { $isSearchOn, $results } from "../state";
 
 async function onChange(event: Event) {
   const search = (event.target as HTMLInputElement).value;
+  if (!search) {
+    $isSearchOn.set(false);
+    $results.set([]);
+    return;
+  }
+  $isSearchOn.set(true);
   const searchResults = await fetchResults(search);
   $results.set(searchResults);
 }

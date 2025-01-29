@@ -1,9 +1,11 @@
-import { html } from "lit-html";
+import { html, render } from "lit-html";
 import { SearchInput } from "./components/SearchInput";
 import { ResultsUI } from "./components/ResultsUI";
 import FiltersUI from "./components/FiltersUI";
+import { $isSearchOn } from "./state";
 
 export default function App() {
+  const isSearchOn = $isSearchOn.getValue();
   return html`
     <div class="bg-yellow-100 min-h-screen">
       <div class="max-w-7xl mx-auto px-4 py-6">
@@ -14,7 +16,7 @@ export default function App() {
 
         <div
           id="search-results-container"
-          class="grid grid-cols-4 gap-6"
+          class="grid ${!isSearchOn ? 'hidden' : ''} grid-cols-4 gap-6"
         >
           <!-- Sidebar Filters -->
           <aside class="col-span-1 ">
@@ -34,3 +36,9 @@ export default function App() {
     </div>
   `;
 }
+
+$isSearchOn.addListener(() => {
+  const root = document.getElementById("app");
+  if (!root) return;
+  render(App(), root!);
+});
